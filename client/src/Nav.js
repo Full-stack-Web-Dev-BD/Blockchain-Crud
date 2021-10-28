@@ -13,7 +13,7 @@ class Navbar extends Component {
                     rel="noopener noreferrer"
                 >
                     <img src={'https://raw.githubusercontent.com/dappuniversity/decentragram/master/src/photo.png'} width="30" height="30" className="d-inline-block align-top" alt="" />
-                    Decentragram - Post ( {this.props.postCount} )
+                    Decentragram - Post ( {this.props.postCount} ) Balance : {this.props.balance}ether
                 </a>
                 <ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">

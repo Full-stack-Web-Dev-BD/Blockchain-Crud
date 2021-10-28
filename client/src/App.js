@@ -5,6 +5,7 @@ import Navbar from './Nav'
 const ipfs = create('https://ipfs.infura.io:5001/api/v0')
 
 const App = () => {
+    const [loading, setLoading] = useState(true)
     const [accounts, setAccounts] = useState([])
     const testContract = useRef(null)
     const [file, setFile] = useState(null)
@@ -31,47 +32,53 @@ const App = () => {
             setPosts(allPost)
         } else {
             alert("Smart Connection failed !! ")
+
         }
     }, [])
 
     async function uploadImage() {
         let uploadedFile = await ipfs.add(file)
         let dc = window.prompt('Please Enter Details')
-        testContract.current.methods.uploadImage(uploadedFile.path, dc).send({ from: accounts[0], gas: 3000000 }).on('transactionHash', (hash) => {
-            console.log(hash)
+        testContract.current.methods.uploadImage(uploadedFile.path, dc).send({ from: accounts[0], gas: 3000000 }).on('transactionHash', async (hash) => {
+            window.location.reload()
         })
     }
 
     return (
         <>
-            <Navbar balance={balance} postCount={index} />
-            <div className="mt-4 col-md-8 offset-md-2 mt-5 pt-5 ">
-                <div className="mt-3 card    p-5">
-                    <h6>Available Post is : {posts.length}</h6>
-                    <p> Balance is :  {balance} </p>
-                    {
-                        file ?
-                            <button onClick={e => uploadImage()} >Upload  :{file.name}  </button> :
-                            <input type="file" onChange={e => setFile(e.target.files[0])} />
-                    }
-                </div>
-                <div className="">
-                    <h5>All Post </h5>
-                    <hr />
-                    <div className=" ">
-                        {
-                            posts.map(el => {
-                                return (
-                                    <div className="card     mt-2 " >
-                                        <p> Title :  {el.description} </p>
-                                        <img style={{ width: "100%" }} src={`https://ipfs.infura.io/ipfs/${el.path}`} />
-                                        <div className="card-footer">
-                                            <button> Make  a Tip ! </button>
+            <div>
+                <Navbar balance={balance} postCount={index} />
+                <div className="mt-4 col-md-8 offset-md-2 mt-5 pt-5 ">
+                    <div className="mt-3 card    ">
+                        <h3 className="alert alert-success p-2">Create a new post </h3>
+                        <div className="p-5 pt-1">
+                            {
+                                file ?
+                                    <button className="btn btn-info " onClick={e => uploadImage()} >Upload  :{file.name}  </button> :
+                                    <input type="file" onChange={e => setFile(e.target.files[0])} />
+                            }
+                        </div>
+                    </div>
+                    <div className="mt-5">
+                        <h5>All Post </h5>
+                        <hr />
+                        <div className=" ">
+                            {
+                                posts.map(el => {
+                                    return (
+                                        <div className="card  p-2    mt-2 " >
+                                            <p> Title :  {el.description} </p>
+                                            <div className="text-center">
+                                                <img style={{ width: "500px" }} src={`https://ipfs.infura.io/ipfs/${el.path}`} />
+                                            </div>
+                                            <div className="card-footer">
+                                                <button className="btn btn-sm btn-success mt-2" > Make  a Tip ! </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                )
-                            })
-                        }
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
