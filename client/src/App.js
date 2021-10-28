@@ -28,6 +28,7 @@ const App = () => {
             for (let i = 1; i <= postCount; i++) {
                 let p = await testContract.current.methods.images(i).call()
                 allPost.push(p)
+                console.log(p)
             }
             setPosts(allPost)
         } else {
